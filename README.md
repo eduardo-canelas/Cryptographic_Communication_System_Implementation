@@ -1,0 +1,2 @@
+# Cryptographic_Communication_System_Implementation
+ Implemented a secure cryptographic communication system using the Hill cipher algorithm in Java, showcasing proficiency in encryption and decryption techniques. Developed a 4x4 key matrix-based solution that ensures confidentiality and data integrity. Enabled users to input custom key matrices and plaintext, with the system providing encrypted and decrypted outputs. Incorporated advanced matrix operations and modular arithmetic for optimal security.
