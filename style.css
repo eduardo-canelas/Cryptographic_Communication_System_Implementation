@@ -1,0 +1,265 @@
+/* Style System: Industrial Cryptographic Utilitarian */
+@import url('https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@800&family=Geist+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-obsidian: #030712;
+  --bg-card: rgba(17, 24, 39, 0.7);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(6, 182, 212, 0.3);
+  --accent-primary: #06b6d4; /* Neon Cyan */
+  --accent-secondary: #10b981; /* Emerald */
+  --accent-danger: #ef4444; /* Rose Red */
+  --text-primary: #f3f4f6; /* Slate 100 */
+  --text-muted: #9ca3af; /* Gray 400 */
+  --font-display: 'Outfit', sans-serif;
+  --font-heading: 'Cabinet Grotesk', sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+}
+
+/* Base resets & custom scrollbars */
+body {
+  background-color: var(--bg-obsidian);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  overflow-x: hidden;
+  min-height: 100dvh;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* Glassmorphism Refraction Edge */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 15px 35px -5px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(6, 182, 212, 0.2);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 25px 45px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* Accent lighting effects */
+.accent-glow {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, rgba(6, 182, 212, 0) 70%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Monospace math styles */
+.math-font {
+  font-family: var(--font-mono);
+}
+
+/* Animated Grid Borders */
+.matrix-input {
+  text-align: center;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.matrix-input:focus {
+  border-color: var(--accent-primary);
+  background: rgba(6, 182, 212, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(6, 182, 212, 0.4);
+  outline: none;
+}
+
+/* Active Highlight States for Interactive Grid Focus */
+.matrix-input.active-row {
+  background-color: rgba(6, 182, 212, 0.06);
+  border-color: rgba(6, 182, 212, 0.3);
+}
+.matrix-input.active-col {
+  background-color: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+.matrix-input.active-row.active-col {
+  background-color: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.35);
+}
+
+/* Interactive Math Step animations */
+.step-container {
+  border-left: 2px solid rgba(255, 255, 255, 0.06);
+  padding-left: 1.5rem;
+  margin-left: 0.5rem;
+}
+.step-dot {
+  position: absolute;
+  left: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #1f2937;
+  border: 2px solid var(--bg-obsidian);
+}
+.step-active .step-dot {
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary);
+}
+
+/* Custom interactive components */
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  height: 2.5rem;
+  padding: 0 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+
+.toggle-btn-inactive {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--accent-primary);
+}
+
+.toggle-btn-inactive:hover {
+  background: rgba(6, 182, 212, 0.1);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #22d3ee;
+  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.15);
+}
+
+.toggle-btn-inactive:active {
+  transform: scale(0.96);
+}
+
+.toggle-btn-active {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: var(--accent-secondary);
+}
+
+.toggle-btn-active:hover {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #34d399;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.15);
+}
+
+.toggle-btn-active:active {
+  transform: scale(0.96);
+}
+
+.accent-button {
+  position: relative;
+  overflow: hidden;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: var(--accent-primary);
+  font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.accent-button::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: var(--accent-primary);
+  transform: translateY(100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+}
+.accent-button:hover {
+  color: var(--bg-obsidian);
+  border-color: var(--accent-primary);
+}
+.accent-button:hover::before {
+  transform: translateY(0);
+}
+.accent-button:active {
+  transform: scale(0.98);
+}
+
+
+/* Premium Tactile Copy Button */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
+}
+
+.copy-btn.copied {
+  color: var(--accent-secondary);
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* Fade animations for blocks */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive grid layout */
+.asymmetric-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+}
+@media (max-width: 1024px) {
+  .asymmetric-grid {
+    grid-template-columns: 1fr;
+  }
+}

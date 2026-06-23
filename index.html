@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hill Cipher Playground - Modular Cryptographic System</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Custom CSS for advanced visual aesthetics -->
+  <link rel="stylesheet" href="style.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            zinc: {
+              950: '#09090b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-zinc-950 text-gray-100 min-h-[100dvh] relative overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
+  <!-- Dynamic Ambient Glowing Meshes (Performance-Safe Fixed Overlays) -->
+  <div class="accent-glow top-0 left-0"></div>
+  <div class="accent-glow bottom-0 right-0"></div>
+
+  <!-- Global Header -->
+  <header class="w-full border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- Brand Icon (Custom SVG Vector) -->
+        <svg class="w-7 h-7 text-cyan-400 animate-spin-[spin_10s_linear_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          <path d="M2 12h20"></path>
+        </svg>
+        <span class="text-lg tracking-tight font-extrabold uppercase text-gray-100 font-heading">
+          Cipher<span class="text-cyan-400">.Core</span>
+        </span>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <!-- Live System Status Widget -->
+        <div class="hidden sm:flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full text-xs font-mono">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+          <span class="text-gray-400">SECURE SHELL</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-6 py-12 relative z-10 space-y-12 fade-in-up">
+    
+    <!-- Asymmetrical Left-Aligned Hero Section -->
+    <section class="max-w-3xl space-y-4">
+      <div class="inline-flex items-center gap-2 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 px-3.5 py-1 rounded-full text-xs tracking-wide uppercase font-mono font-semibold">
+        Modular Cryptographic Playground
+      </div>
+      <h1 class="text-4xl md:text-6xl tracking-tight leading-none text-gray-100 font-extrabold font-heading">
+        Hill Cipher Sandbox & Solver
+      </h1>
+      <p class="text-base md:text-lg text-gray-400 leading-relaxed font-light">
+        An interactive, production-grade interface showcasing the 4x4 matrix-based Hill Cipher. Compute modular linear equations, evaluate invertibility, and trace matrix determinants step-by-step in real-time.
+      </p>
+    </section>
+
+    <!-- Main Workspace Layout: Row 1 - Key Management Suite -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Key Matrix Configurator Card (Left/Wider) -->
+      <div class="lg:col-span-7 space-y-8">
+        <section id="matrix-card-wrap" class="glass-panel p-8 rounded-[2rem] space-y-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h2 class="text-lg font-bold text-gray-100 font-heading">Key Matrix Configuration</h2>
+              <p class="text-xs text-gray-400 mt-0.5">Input a 4x4 key matrix (modulo 26 arithmetic).</p>
+            </div>
+            <!-- Matrix Status Invertibility Indicator -->
+            <div class="flex flex-col items-end">
+              <div id="matrix-status-badge" class="px-3 py-1 text-xs font-semibold rounded-full bg-zinc-800 text-gray-400 border border-zinc-700 flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> UNCHECKED
+              </div>
+              <span id="matrix-status-reason" class="text-[10px] text-gray-500 mt-1 font-mono"></span>
+            </div>
+          </div>
+
+          <!-- Presets targets -->
+          <div class="flex flex-wrap items-center gap-2.5" id="preset-buttons-container">
+            <span class="text-xs text-gray-400 mr-1.5">Presets:</span>
+            <button onclick="loadPresetKey(0)" class="px-4 py-2 rounded-lg text-xs font-mono border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-white cursor-pointer h-10 select-none">
+              Standard Invertible
+            </button>
+            <button onclick="loadPresetKey(1)" class="px-4 py-2 rounded-lg text-xs font-mono border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-white cursor-pointer h-10 select-none">
+              Alternate Coprime
+            </button>
+            <button onclick="loadPresetKey(2)" class="px-4 py-2 rounded-lg text-xs font-mono border border-zinc-800 bg-zinc-900/60 hover:bg-zinc-800/80 hover:text-white cursor-pointer h-10 select-none">
+              Non-Invertible (Singular)
+            </button>
+          </div>
+
+          <!-- Interactive 4x4 Matrix Grid -->
+          <div class="grid grid-cols-4 gap-3 max-w-[320px] mx-auto sm:mx-0">
+            <!-- Cell Inputs -->
+            <input type="number" id="cell-0-0" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="6">
+            <input type="number" id="cell-0-1" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="24">
+            <input type="number" id="cell-0-2" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="1">
+            <input type="number" id="cell-0-3" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="13">
+
+            <input type="number" id="cell-1-0" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="20">
+            <input type="number" id="cell-1-1" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="17">
+            <input type="number" id="cell-1-2" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="15">
+            <input type="number" id="cell-1-3" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="23">
+
+            <input type="number" id="cell-2-0" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="17">
+            <input type="number" id="cell-2-1" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="14">
+            <input type="number" id="cell-2-2" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="23">
+            <input type="number" id="cell-2-3" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="14">
+
+            <input type="number" id="cell-3-0" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="17">
+            <input type="number" id="cell-3-1" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="20">
+            <input type="number" id="cell-3-2" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="17">
+            <input type="number" id="cell-3-3" class="matrix-input w-16 h-16 rounded-xl font-mono text-lg text-white font-bold select-all" value="1">
+          </div>
+          
+          <!-- Transposed Modular Inverse Output Matrix -->
+          <div id="inverse-matrix-container" class="space-y-3 pt-4 border-t border-zinc-900 transition-opacity">
+            <div class="text-xs text-gray-400 font-mono">Calculated Modular Inverse Matrix (K⁻¹ mod 26):</div>
+            <div class="grid grid-cols-4 gap-3 max-w-[240px]">
+              <div id="inv-cell-0-0" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-0-1" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-0-2" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-0-3" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+
+              <div id="inv-cell-1-0" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-1-1" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-1-2" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-1-3" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+
+              <div id="inv-cell-2-0" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-2-1" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-2-2" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-2-3" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+
+              <div id="inv-cell-3-0" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-3-1" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-3-2" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+              <div id="inv-cell-3-3" class="w-12 h-12 bg-zinc-950/60 border border-zinc-900 rounded-lg flex items-center justify-center font-mono text-sm text-cyan-400 font-semibold select-none">0</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Matrix Inversion Solver Card (Right/Narrower) -->
+      <div class="lg:col-span-5 space-y-8">
+        <section id="math-trace-card" class="glass-panel p-8 rounded-[2rem] space-y-6">
+          <div>
+            <h2 class="text-lg font-bold text-gray-100 font-heading">Matrix Inversion Solver</h2>
+            <p class="text-xs text-gray-400 mt-0.5">Live trace of modular mathematical calculations.</p>
+          </div>
+          
+          <div id="math-trace-content" class="space-y-4">
+            <!-- Math trace gets injected here dynamically -->
+          </div>
+        </section>
+      </div>
+
+    </div>
+
+    <!-- Main Workspace Layout: Row 2 - Cryptographic Workstation -->
+    <div class="w-full">
+      <section id="enc-dec-card" class="glass-panel p-8 rounded-[2rem] space-y-8">
+        <div>
+          <h2 class="text-lg font-bold text-gray-100 font-heading">Cryptographic Workstation</h2>
+          <p class="text-xs text-gray-400 mt-0.5">Encrypt and decrypt messages using the configured key matrices.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Encryption Panel -->
+          <div class="space-y-4">
+            <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> ENCRYPTION
+            </div>
+            <div class="space-y-2">
+              <label for="encrypt-input" class="text-xs text-gray-400 font-medium">Plaintext Message</label>
+              <textarea id="encrypt-input" class="w-full bg-zinc-950 border border-zinc-900 rounded-xl p-3 text-sm text-white focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 outline-none h-24" placeholder="Enter plaintext (letters only)...">HELLO WORLD</textarea>
+            </div>
+            
+            <!-- Live Calculation Panel -->
+            <div id="encrypt-result-container" class="space-y-3 pt-3 border-t border-zinc-900/60">
+              <div class="space-y-2">
+                <label for="encrypt-output" class="text-xs text-gray-400 font-medium block">Ciphertext Output</label>
+                <div class="flex gap-2">
+                  <input type="text" id="encrypt-output" class="flex-1 bg-zinc-950/80 border border-zinc-900 rounded-xl p-3 text-sm text-cyan-400 font-mono font-bold outline-none" readonly>
+                  <button type="button" id="copy-encrypt-btn" class="copy-btn animate-fade-in" onclick="copyOutput('encrypt-output', 'copy-encrypt-btn')" title="Copy Ciphertext">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-3a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.875V18a2.25 2.25 0 0 0 2.25 2.25h5.25a2.25 2.25 0 0 0 2.25-2.25V7.875m-9 0h9" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <span class="text-xs text-gray-500 font-semibold uppercase block">Step Execution Flow</span>
+                <div id="encrypt-steps" class="max-h-60 overflow-y-auto bg-zinc-950/40 border border-zinc-900 rounded-xl p-3 space-y-3">
+                  <!-- Steps get injected here -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decryption Panel -->
+          <div class="space-y-4">
+            <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> DECRYPTION
+            </div>
+            <div class="space-y-2">
+              <label for="decrypt-input" class="text-xs text-gray-400 font-medium">Ciphertext Message</label>
+              <textarea id="decrypt-input" class="w-full bg-zinc-950 border border-zinc-900 rounded-xl p-3 text-sm text-white focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 outline-none h-24" placeholder="Enter ciphertext (letters only)...">LPMNQXIAOSZE</textarea>
+            </div>
+            
+            <!-- Live Calculation Panel -->
+            <div id="decrypt-result-container" class="space-y-3 pt-3 border-t border-zinc-900/60">
+              <div class="space-y-2">
+                <label for="decrypt-output" class="text-xs text-gray-400 font-medium block">Decrypted Output</label>
+                <div class="flex gap-2">
+                  <input type="text" id="decrypt-output" class="flex-1 bg-zinc-950/80 border border-zinc-900 rounded-xl p-3 text-sm text-emerald-400 font-mono font-bold outline-none" readonly>
+                  <button type="button" id="copy-decrypt-btn" class="copy-btn animate-fade-in" onclick="copyOutput('decrypt-output', 'copy-decrypt-btn')" title="Copy Plaintext">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H5.25m11.9-3.664A2.251 2.251 0 0 0 15 2.25h-3a2.251 2.251 0 0 0-2.15 1.586m5.8 0c.065.21.1.433.1.664v.75h-6V4.5c0-.231.035-.454.1-.664M6.75 7.875V18a2.25 2.25 0 0 0 2.25 2.25h5.25a2.25 2.25 0 0 0 2.25-2.25V7.875m-9 0h9" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <span class="text-xs text-gray-500 font-semibold uppercase block">Step Execution Flow</span>
+                <div id="decrypt-steps" class="max-h-60 overflow-y-auto bg-zinc-950/40 border border-zinc-900 rounded-xl p-3 space-y-3">
+                  <!-- Steps get injected here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="w-full border-t border-zinc-900 bg-zinc-950 py-8 mt-16 text-center text-xs text-gray-500 font-mono">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <span>CIPHER.CORE // MODULAR HILL CIPHER PROTOCOL 2.0</span>
+      <span class="flex items-center gap-1">
+        <svg class="w-3.5 h-3.5 text-zinc-600" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </svg>
+        GitHub Repository Showcase
+      </span>
+    </div>
+  </footer>
+
+  <!-- Script logic hook -->
+  <script src="app.js"></script>
+</body>
+</html>ml>
