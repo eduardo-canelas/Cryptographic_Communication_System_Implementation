@@ -4,6 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hill Cipher Playground - Modular Cryptographic System</title>
+
+  <!-- Favicons & App Icons -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#06b6d4">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:title" content="Cipher.Core — Modular Hill Cipher System">
+  <meta property="og:description" content="Interactive 4x4 matrix-based Hill Cipher playground. Encrypt, decrypt, and trace modular linear algebra in real time.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="/assets/og-image.png">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Custom CSS for advanced visual aesthetics -->
@@ -32,12 +49,9 @@
   <header class="w-full border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <!-- Brand Icon (Custom SVG Vector) -->
-        <svg class="w-7 h-7 text-cyan-400 animate-spin-[spin_10s_linear_infinite]" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-          <path d="M2 12h20"></path>
-        </svg>
+        <!-- Brand Logo (AI-generated cipher-matrix mark) -->
+        <img src="/assets/logo.png" alt="Cipher.Core logo" width="36" height="36"
+             class="w-9 h-9 rounded-lg ring-1 ring-cyan-500/20 shadow-[0_0_18px_-4px_rgba(6,182,212,0.5)]">
         <span class="text-lg tracking-tight font-extrabold uppercase text-gray-100 font-heading">
           Cipher<span class="text-cyan-400">.Core</span>
         </span>
